@@ -18,7 +18,7 @@ public class DeviceControlService {
     @Autowired
     private NotificationController notificationController;
 
-    public DeviceControl updateDeviceStatus(String deviceName, boolean status) {
+    public DeviceControl addDevice(String deviceName, boolean status, Long schoolId) {
         DeviceControl control = new DeviceControl();
         control.setDeviceName(deviceName);
         control.setStatus(status);
@@ -26,9 +26,31 @@ public class DeviceControlService {
 
         DeviceControl savedControl = deviceControlRepository.save(control);
 
-        notificationController.sendDeviceStatusNotification(deviceName + "의 상태가 변경되었습니다.");
-
         return savedControl;
+    }
+
+    public DeviceControl updateDeviceStatus(String deviceName, boolean status, Long schoolId) {
+        DeviceControl control = deviceControlRepository.findByDeviceNameAndSchool_Id(deviceName, schoolId);
+        if (control != null) {
+            control.setStatus(status);
+            control.setTimestamp(LocalDateTime.now());
+
+            control = deviceControlRepository.save(control);
+
+            notificationController.sendDeviceStatusNotification(deviceName + "의 상태가 변경되었습니다.");
+
+            return control;
+        } else {
+            throw new RuntimeException("기기를 찾을 수 없습니다.");
+        }
+    }
+
+    public List<DeviceControl> getAllDeviceStatusBySchool(Long schoolId) {
+        return deviceControlRepository.findBySchool_Id(schoolId);
+    }
+
+    public DeviceControl getDeviceStatusBySchool(String deviceName, Long schoolId) {
+        return deviceControlRepository.findByDeviceNameAndSchool_Id(deviceName, schoolId);
     }
 
     public List<DeviceControl> getAllDeviceStatus() {

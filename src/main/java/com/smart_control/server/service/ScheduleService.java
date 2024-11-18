@@ -26,10 +26,10 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 2000)
     public void executeScheduleTasks() {
         LocalDateTime now = LocalDateTime.now();
-        List<Schedule> dueSchedules = scheduleRepository.findByScheduleTimeBefore(now);
+        List<Schedule> dueSchedules = scheduleRepository.findByScheduledTimeBefore(now);
 
         for (Schedule schedule : dueSchedules) {
             deviceControlService.updateDeviceStatus(schedule.getDeviceName(), schedule.isStatus());

@@ -1,7 +1,6 @@
 package com.smart_control.server.model;
 
-import java.time.LocalDateTime;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,59 +9,41 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class DeviceControl {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String deviceName;
-    private boolean status;
-    private LocalDateTime timestamp;
+    @Column(unique = true)
+    private String username;
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "school_id")
     private School school;
-
-    public DeviceControl() {
-        this.timestamp = LocalDateTime.now();
-    }
-
+    
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getDeviceName() {
-        return deviceName;
+    public String getUsername() {
+        return username;
     }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
-    public boolean isStatus() {
-        return status;
+    public String getPassword() {
+        return password;
     }
-
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public School getSchool() {
         return school;
     }
-
+    
     public void setSchool(School school) {
         this.school = school;
     }
