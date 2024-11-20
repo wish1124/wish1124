@@ -9,42 +9,68 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 @Component
 public class JwtUtil {
-    private String secretKey = "SmArtCoNtRoL2)2$1@3";
-    private long expirationTime = 86400000;
+    private static final String SECRET_KEY = "SmArtCoNtRoL2)2$1@3";
+    private static final long ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000;
+    private static final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000;
 
-    public String generateToken(String username, Long schoolId) {
+    public static String generateAccessToken(String username, Long schoolId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("schoolId", schoolId);
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(username)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-            .signWith(SignatureAlgorithm.HS512, secretKey)
+            .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+            .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
             .compact();
     }
 
-    public String extractUsername(String token) {
+    public static String generateRefreshToken(String username, Long schoolId) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("schoolId", schoolId);
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(username)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+            .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+            .compact();
+    }
+
+    public static Claims validateToken(String token) {
+        try {
+            return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
+        } catch (SignatureException e) {
+            throw new RuntimeException("유효하지 않은 토큰입니다.");
+        }
+
+    }
+
+    public static String extractUsername(String token) {
         return getClaims(token).getSubject();
     }
 
-    public Long extractCompanyId(String token) {
+    public static Long extractSchoolId(String token) {
         return getClaims(token).get("schoolId", Long.class);
     }
 
 
-    public boolean isTokenValid(String token) {
+    public static boolean isTokenValid(String token) {
         return !isTokenExpired(token);
     }
 
-    public boolean isTokenExpired(String token) {
+    public static boolean isTokenExpired(String token) {
         return getClaims(token).getExpiration().before(new Date());
     }
 
-    public Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    public static Claims getClaims(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 }

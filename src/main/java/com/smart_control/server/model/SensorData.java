@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class SensorData {
@@ -16,6 +18,10 @@ public class SensorData {
     private String type;
     private double value;
     private LocalDateTime timestamp;
+
+    @ManyToOne
+    @JoinColumn(name = "device_id")
+    private DeviceControl device;
 
     public SensorData() {
         this.timestamp = LocalDateTime.now();
@@ -43,6 +49,12 @@ public class SensorData {
 
     public void setValue(double value) {
         this.value = value;
+    }
+    public DeviceControl getDevice() {
+        return device;
+    }
+    public void setDevice(DeviceControl device) {
+        this.device = device;
     }
 
     public LocalDateTime getTimestamp() {

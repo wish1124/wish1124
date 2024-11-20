@@ -8,7 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import lombok.NoArgsConstructor;
+
 @Entity
+@NoArgsConstructor
 public class School {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,5 +55,9 @@ public class School {
 
     public void setDevices(List<DeviceControl> devices) {
         this.devices = devices;
+    }
+
+    public School(String name) {
+        this.name = name;
     }
 }

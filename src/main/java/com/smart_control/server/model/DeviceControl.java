@@ -2,12 +2,16 @@ package com.smart_control.server.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import lombok.NoArgsConstructor;
 
 @Entity
 public class DeviceControl {
@@ -19,12 +23,19 @@ public class DeviceControl {
     private boolean status;
     private LocalDateTime timestamp;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "school_id")
     private School school;
 
     public DeviceControl() {
         this.timestamp = LocalDateTime.now();
+    }
+
+    public DeviceControl(String deviceName, boolean status, School school) {
+        this();
+        this.deviceName = deviceName;
+        this.status = status;
+        this.school = school;
     }
 
     public Long getId() {

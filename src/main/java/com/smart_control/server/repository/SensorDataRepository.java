@@ -10,4 +10,6 @@ import com.smart_control.server.model.SensorData;
 @Repository
 public interface SensorDataRepository extends JpaRepository<SensorData, Long> {
     List<SensorData> findByType(String type);
+
+    List<SensorData> findByDevice_Id(Long id);
 }

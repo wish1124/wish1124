@@ -1,5 +1,7 @@
 package com.smart_control.server.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,9 @@ public class AuthenticationService {
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("일치하는 계정이 없습니다."));
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return jwtUtil.generateToken(username);
+            Long schoolId = user.getSchool().getId();
+            String accessToken = JwtUtil.generateAccessToken(username, schoolId);
+            return accessToken;
         } else {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }

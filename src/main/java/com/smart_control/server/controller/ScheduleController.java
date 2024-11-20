@@ -10,6 +10,7 @@ import com.smart_control.server.service.ScheduleService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+// 1. add schedule
 
 @RestController
 @RequestMapping("/api/schedules")

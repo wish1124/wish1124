@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.smart_control.server.controller.NotificationController;
 import com.smart_control.server.model.DeviceControl;
+import com.smart_control.server.model.School;
 import com.smart_control.server.repository.DeviceControlRepository;
+import com.smart_control.server.repository.SchoolRepository;
 
 @Service
 public class DeviceControlService {
@@ -16,10 +18,14 @@ public class DeviceControlService {
     private DeviceControlRepository deviceControlRepository;
 
     @Autowired
+    private SchoolRepository schoolRepository;
+
+    @Autowired
     private NotificationController notificationController;
 
     public DeviceControl addDevice(String deviceName, boolean status, Long schoolId) {
-        DeviceControl control = new DeviceControl();
+        School school = schoolRepository.findById(schoolId).orElseThrow();
+        DeviceControl control = new DeviceControl(deviceName, status, school);
         control.setDeviceName(deviceName);
         control.setStatus(status);
         control.setTimestamp(LocalDateTime.now());

@@ -18,6 +18,11 @@ import com.smart_control.server.model.DeviceControl;
 import com.smart_control.server.model.SensorData;
 import com.smart_control.server.service.DeviceControlService;
 
+// 1. add device
+// 2. update device - status
+// 3. fetch all devices' status
+// 4. fetch device's status by device name
+
 @RestController
 @RequestMapping("/api/devices")
 public class DeviceController {
@@ -40,24 +45,24 @@ public class DeviceController {
         return ResponseEntity.ok().body(control);
     }
     
-    @GetMapping("/control-debug")
+    @GetMapping("/status-debug")
     public ResponseEntity<List<DeviceControl>> getAllDeviceStatus() {
         return ResponseEntity.ok(deviceControlService.getAllDeviceStatus());
     }
     
-    @GetMapping("/control")
+    @GetMapping("/status")
     public ResponseEntity<List<DeviceControl>> getAllDeviceStatus(Authentication authentication) {
         Long schoolId = getSchoolIdFromAuthentication(authentication);
         return ResponseEntity.ok(deviceControlService.getAllDeviceStatusBySchool(schoolId));
     }
     
-    @GetMapping("/control-debug/{deviceName}")
+    @GetMapping("/status-debug/{deviceName}")
     public ResponseEntity<DeviceControl> getDeviceStatus(@PathVariable String deviceName) {
         // Todo: 없을 경우에 404코드 전달 필요
         return ResponseEntity.ok(deviceControlService.getDeviceStatus(deviceName));
     }
 
-    @GetMapping("/control/{deviceName}")
+    @GetMapping("/status/{deviceName}")
     public ResponseEntity<DeviceControl> getDeviceStatus(@PathVariable String deviceName, Authentication authentication) {
         // Todo: 없을 경우에 404코드 전달 필요
         Long schoolId = getSchoolIdFromAuthentication(authentication);
@@ -65,7 +70,6 @@ public class DeviceController {
     }
 
     private Long getSchoolIdFromAuthentication(Authentication authentication) {
-        // TODO: 
-        return 0l;
+        return (Long) authentication.getDetails();
     }
 }

@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+// 1. send notification (sensor data)
+// 2. send notification (status change)
+
 @Controller
 public class NotificationController {
     @Autowired

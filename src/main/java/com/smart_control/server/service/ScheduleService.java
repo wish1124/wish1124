@@ -32,9 +32,10 @@ public class ScheduleService {
         List<Schedule> dueSchedules = scheduleRepository.findByScheduledTimeBefore(now);
 
         for (Schedule schedule : dueSchedules) {
-            deviceControlService.updateDeviceStatus(schedule.getDeviceName(), schedule.isStatus());
 
-            notificationController.sendDeviceStatusNotification(schedule.getDeviceName() + "의 예약된 상태가 변경되었습니다. " + (schedule.isStatus() ? "ON" : "OFF"));
+            deviceControlService.updateDeviceStatus(schedule.getDevice().getDeviceName(), schedule.isStatus(), schedule.getSchool().getId());
+
+            notificationController.sendDeviceStatusNotification(schedule.getDevice().getDeviceName() + "의 예약된 상태가 변경되었습니다. " + (schedule.isStatus() ? "ON" : "OFF"));
 
             scheduleRepository.delete(schedule);
         }

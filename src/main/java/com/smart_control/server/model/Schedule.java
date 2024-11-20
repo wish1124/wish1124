@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Schedule {
@@ -13,7 +16,14 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String deviceName;
+    @ManyToOne
+    @JoinColumn(name = "school_id")
+    private School school;
+
+    @ManyToOne
+    @JoinColumn(name = "device_id")
+    private DeviceControl device;
+
     private boolean status;
     private LocalDateTime scheduledTime;
 
@@ -23,11 +33,17 @@ public class Schedule {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getDeviceName() {
-        return deviceName;
+    public School getSchool() {
+        return school;
     }
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
+    public void setSchool(School school) {
+        this.school = school;
+    }
+    public DeviceControl getDevice() {
+        return device;
+    }
+    public void setDevice(DeviceControl device) {
+        this.device = device;
     }
     public boolean isStatus() {
         return status;
